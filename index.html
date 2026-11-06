@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#07100f" />
+<title>BLACKSITE // NIGHTFALL</title>
+<style>
+:root{color-scheme:dark;--acid:#d6ff62;--ice:#a6e8df;--muted:#91a5a0;--glass:rgba(9,20,19,.78)}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07100f;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#e8f1ec;touch-action:none}canvas{display:block;width:100%;height:100%;outline:none}#game{position:fixed;inset:0}.grain{position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");mix-blend-mode:screen}.vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 42%,rgba(0,0,0,.62) 100%)}.screen{position:fixed;inset:0;display:grid;place-items:center;padding:24px;background:linear-gradient(90deg,rgba(2,8,8,.78),rgba(2,8,8,.18) 68%,rgba(2,8,8,.45));z-index:5}.panel{width:min(560px,100%);margin-right:auto;margin-left:min(7vw,100px)}.eyebrow{font-size:11px;letter-spacing:.25em;color:var(--acid);font-weight:800;text-transform:uppercase}.title{font-size:clamp(42px,8vw,82px);line-height:.88;letter-spacing:-.07em;margin:19px 0 19px;font-weight:900}.title span{display:block;color:var(--acid)}.subtitle{max-width:410px;font-size:14px;line-height:1.75;color:#b8c5c0}.briefing{margin:26px 0 25px;padding:14px 16px;border-left:2px solid var(--acid);background:rgba(12,26,24,.76);max-width:390px}.briefing b{font-size:10px;letter-spacing:.18em;color:var(--acid)}.briefing p{font-size:12px;line-height:1.6;color:#c5d0ca;margin:8px 0 0}.btn{border:0;background:var(--acid);color:#11180a;padding:15px 23px;font:900 12px inherit;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;min-height:50px;box-shadow:0 7px 30px rgba(214,255,98,.12);transition:transform .15s,background .15s}.btn:hover{transform:translateY(-2px);background:#e2ff8d}.controls-copy{font-size:10px;color:#91a19c;letter-spacing:.08em;margin-top:18px;line-height:1.7}#damage{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(150,15,8,.55) 100%);transition:opacity .12s}.hidden{display:none!important}#hud{position:fixed;inset:0;pointer-events:none;z-index:2;display:none}.hud-top{position:absolute;top:max(20px,env(safe-area-inset-top));left:24px;right:24px;display:flex;justify-content:space-between;align-items:flex-start}.mission{font-size:9px;color:var(--acid);letter-spacing:.2em;font-weight:800}.objective{font-size:13px;font-weight:700;margin-top:6px;text-shadow:0 2px 6px #000}.status{border:1px solid rgba(202,240,218,.22);background:var(--glass);padding:10px 13px;min-width:120px;text-align:right;backdrop-filter:blur(8px)}.status small{font-size:8px;letter-spacing:.18em;color:var(--muted);display:block}.status strong{font-size:12px;letter-spacing:.12em;color:var(--acid)}.hud-bottom{position:absolute;bottom:max(22px,env(safe-area-inset-bottom));left:24px;right:24px;display:flex;align-items:flex-end;justify-content:space-between}.vitals{display:flex;gap:14px;align-items:flex-end}.healthbox,.ammobox{padding:9px 12px;background:var(--glass);border-left:2px solid var(--acid);min-width:89px}.healthbox small,.ammobox small{font-size:8px;letter-spacing:.16em;color:var(--muted);display:block;margin-bottom:4px}.healthbox strong{font-size:16px}.ammobox strong{font-size:20px;letter-spacing:.08em}.ammobox em{font-size:11px;color:#8da19a;font-style:normal}.weapon-name{font-size:9px;letter-spacing:.17em;color:#d4ded9;margin-top:5px}.toast{position:absolute;top:20%;left:50%;transform:translate(-50%,-10px);padding:11px 16px;background:rgba(9,19,17,.88);border:1px solid rgba(214,255,98,.4);font-size:10px;letter-spacing:.16em;color:var(--acid);opacity:0;transition:.3s;text-align:center;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}.crosshair{position:absolute;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%);opacity:.85}.crosshair:before,.crosshair:after{content:"";position:absolute;background:#d9ff94;box-shadow:0 0 5px #baff78}.crosshair:before{width:1px;height:18px;left:8px;top:0}.crosshair:after{height:1px;width:18px;top:8px;left:0}.hitmarker{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);width:12px;height:12px;border:1px solid white;opacity:0;transition:opacity .08s}.hitmarker.on{opacity:1}.mobile-controls{display:none}.joystick{position:absolute;left:max(20px,env(safe-area-inset-left));bottom:max(28px,calc(env(safe-area-inset-bottom) + 22px));width:120px;height:120px;border:1px solid rgba(225,255,240,.29);border-radius:50%;background:rgba(16,31,28,.32);pointer-events:auto;touch-action:none}.stick{position:absolute;left:50%;top:50%;width:47px;height:47px;border-radius:50%;transform:translate(-50%,-50%);background:rgba(214,255,98,.48);border:1px solid rgba(224,255,160,.8);box-shadow:0 0 22px #b8ff5a22}.fire-btn,.reload-btn{position:absolute;right:max(23px,env(safe-area-inset-right));bottom:max(44px,calc(env(safe-area-inset-bottom) + 35px));pointer-events:auto;touch-action:none;border-radius:50%;display:grid;place-items:center;user-select:none}.fire-btn{width:75px;height:75px;background:rgba(214,255,98,.8);color:#14200c;font-size:10px;font-weight:900;letter-spacing:.1em;border:1px solid #edffb4;box-shadow:0 0 30px #b8ff5a33}.reload-btn{width:45px;height:45px;right:max(110px,calc(env(safe-area-inset-right) + 105px));bottom:max(57px,calc(env(safe-area-inset-bottom) + 46px));background:rgba(9,20,19,.8);border:1px solid #ffffff44;font-size:9px;color:#e5eee8}.look-zone{position:absolute;right:0;top:18%;width:58%;height:66%;pointer-events:auto;touch-action:none}.action-btn{position:absolute;right:max(20px,env(safe-area-inset-right));top:50%;transform:translateY(-50%);display:none;pointer-events:auto;background:rgba(214,255,98,.92);color:#15200d;border:0;padding:13px 15px;font-size:9px;font-weight:900;letter-spacing:.12em}.reticle-label{position:absolute;left:50%;top:calc(50% + 24px);transform:translateX(-50%);font-size:8px;letter-spacing:.16em;color:#d6ff62;text-shadow:0 1px 5px #000;white-space:nowrap}#endScreen{background:rgba(3,10,9,.82);backdrop-filter:blur(8px)}#endScreen .panel{margin:0}.result{font-size:12px;line-height:1.8;color:#b9c9c2;max-width:400px;margin-bottom:25px}@media(max-width:700px){.panel{margin:0;align-self:end;padding-bottom:11vh}.screen{background:linear-gradient(0deg,rgba(2,8,8,.94),rgba(2,8,8,.35) 100%);align-items:end}.title{font-size:clamp(44px,13vw,68px)}.subtitle{font-size:12px}.briefing{margin:18px 0}.controls-copy{font-size:9px}.hud-top{left:15px;right:15px;top:max(14px,env(safe-area-inset-top))}.hud-bottom{left:15px;right:15px;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 130px)}.mobile-controls{display:block}.vitals{margin-left:0;gap:6px}.healthbox,.ammobox{min-width:66px;padding:7px 8px}.healthbox strong{font-size:13px}.ammobox strong{font-size:17px}.ammobox em{font-size:9px}.weapon-name{font-size:7px}.status{min-width:100px;padding:8px 10px}.objective{max-width:65vw;font-size:11px}.action-btn{top:auto;right:20px;bottom:178px;transform:none}.toast{top:18%}.crosshair{width:15px;height:15px}.crosshair:before{height:15px;left:7px}.crosshair:after{width:15px;top:7px}}@media(orientation:landscape) and (max-height:520px){.joystick{width:90px;height:90px;bottom:18px}.stick{width:38px;height:38px}.fire-btn{width:62px;height:62px;bottom:22px}.reload-btn{bottom:31px}.vitals{margin-left:0}.hud-bottom{bottom:calc(max(12px,env(safe-area-inset-bottom)) + 96px)}.panel{padding-bottom:3vh}}
+</style>
+</head>
+<body>
+<div id="game"></div><div class="grain"></div><div class="vignette"></div>
+<div id="startScreen" class="screen"><div class="panel"><div class="eyebrow">A covert-action experience · 1997 / classified</div><h1 class="title">BLACKSITE<span>NIGHTFALL</span></h1><p class="subtitle">Infiltrate the abandoned Arctic relay. Secure the intelligence core. Reach the extraction gate before the facility locks down.</p><div class="briefing"><b>FIELD BRIEF / 01</b><p>Hostile security is active. Find the glowing data core in the operations wing, then make for the green extraction beacon. Keep moving. Stay quiet if you can.</p></div><button id="startBtn" class="btn">Begin operation&nbsp; ↗</button><div class="controls-copy">MOVE &nbsp; WASD / LEFT STICK &nbsp; · &nbsp; AIM &nbsp; MOUSE / DRAG<br>FIRE &nbsp; CLICK / TAP &nbsp; · &nbsp; RELOAD &nbsp; R / RELOAD</div></div></div>
+<div id="damage"></div><div id="hud"><div class="hud-top"><div><div class="mission">OPERATION NIGHTFALL &nbsp; / &nbsp; KOLA PENINSULA</div><div id="objective" class="objective">Locate the intelligence core</div></div><div class="status"><small>FACILITY ALERT</small><strong id="alertText">LOW / 02</strong></div></div><div class="crosshair"></div><div class="hitmarker" id="hitmarker"></div><div class="reticle-label" id="reticleLabel"></div><div class="toast" id="toast"></div><button id="actionBtn" class="action-btn">SECURE CORE</button><div class="hud-bottom"><div class="healthbox"><small>VITALS</small><strong id="health">100%</strong></div><div class="ammobox"><small>9MM / SUPPRESSED</small><strong id="ammo">12 <em>/ 48</em></strong><div class="weapon-name">P9 SERVICE PISTOL</div></div></div><div class="mobile-controls"><div class="joystick" id="joystick"><div class="stick" id="stick"></div></div><div class="look-zone" id="lookZone"></div><div class="fire-btn" id="fireBtn">FIRE</div><div class="reload-btn" id="reloadBtn">RLD</div></div></div>
+<div id="endScreen" class="screen hidden"><div class="panel"><div class="eyebrow" id="endEyebrow">MISSION COMPLETE</div><h2 class="title" id="endTitle">EXFIL<span>SECURED</span></h2><p class="result" id="endResult">The intelligence is safe. The facility will never know you were there.</p><button id="restartBtn" class="btn">Run it again&nbsp; ↗</button></div></div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+const $=s=>document.querySelector(s), gameEl=$('#game');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x07110f);scene.fog=new THREE.FogExp2(0x07110f,.027);
+const camera=new THREE.PerspectiveCamera(73,innerWidth/innerHeight,.08,100);camera.rotation.order='YXZ';
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.65));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;gameEl.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xb6d8cc,0x243431,1.65));const key=new THREE.DirectionalLight(0xc9e3d5,1.5);key.position.set(-5,12,4);scene.add(key);const fill=new THREE.DirectionalLight(0x6bbfa9,.55);fill.position.set(7,6,-20);scene.add(fill);
+const mat=(color,roughness=.82,metalness=0,emissive=0x000000)=>new THREE.MeshStandardMaterial({color,roughness,metalness,emissive,emissiveIntensity:1});
+const M={floor:mat(0x34413d),wall:mat(0x4b5753),dark:mat(0x1c2523),trim:mat(0x87938c,.52,.18),crate:mat(0x69705f),crate2:mat(0x4d5850),yellow:mat(0xc0ac4f),cyan:mat(0x7affdc,.38,.05,0x17a97d),red:mat(0xff563c,.5,.05,0xb51b12),white:mat(0xc8d4ca),black:mat(0x28302d,.62,.18),gun:mat(0x59645f,.46,.3),screen:mat(0x4effbb,.28,.05,0x18a76b)};
+function box(x,y,z,w,h,d,m,opts={}){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=false;o.receiveShadow=true;if(opts.rot)o.rotation.y=opts.rot;scene.add(o);return o}
+function cylinder(x,y,z,r1,r2,h,m,seg=10){const o=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,seg),m);o.position.set(x,y,z);scene.add(o);return o}
+function pointLight(x,y,z,color,intensity,distance){const l=new THREE.PointLight(color,intensity,distance,2);l.position.set(x,y,z);scene.add(l);return l}
+const worldBounds={minX:-15.5,maxX:15.5,minZ:-39,maxZ:12};
+function buildWorld(){
+ box(0,-.28,-13,34,.5,54,M.floor);
+ // subtle floor panels / luminous hazard guides
+ for(let z=9;z>-39;z-=4){box(0,-.015,z,31,.025,.035,M.dark);}
+ for(const x of [-15,-10,-5.3,5.3,10,15])box(x,-.01,-13,.022,.02,51,M.dark);
+ // outer shell
+ box(0,2.1,13,34,4.2,.7,M.wall);box(0,2.1,-40,34,4.2,.7,M.wall);
+ box(-16.8,2.1,-13,.7,4.2,54,M.wall);box(16.8,2.1,-13,.7,4.2,54,M.wall);
+ // ceiling beams
+ for(let z=10;z>-39;z-=6){box(0,4.3,z,33,.22,.28,M.dark);for(let x of [-10,-3.6,3.6,10])box(x,4.14,z,.045,.04,2,M.trim);}
+ // central transit hall to operations wing; side partition segments and door gaps
+ // broken side partitions make each bay reachable from the transit hall
+ for(const [x,z,l] of [[-5.4,3.5,19],[-5.4,-16,8],[-5.4,-33,12],[5.4,3.5,19],[5.4,-15,6],[5.4,-31,16]])box(x,1.8,z,.45,3.6,l,M.wall);
+ // west storage rooms, with service gaps at z=-9 and z=-21
+ for(const x of [-12.9]){box(x,1.8,-9,5.1,3.6,.38,M.wall);box(x,1.8,-21,5.1,3.6,.38,M.wall);}
+ // operations wing: entry portal at z=-22 and rear partition at z=-32
+ box(5.9,1.8,-22,1.1,3.6,.4,M.wall);box(12.1,1.8,-22,3.2,3.6,.4,M.wall);box(10.7,1.8,-32,12,3.6,.4,M.wall);
+ box(13.7,1.8,-27,.4,3.6,10,M.wall);
+ // steel door frames leave a clear passage
+ for(const [x,z] of [[-5.35,-9],[5.35,-22]]){box(x,1.8,z,.15,3.6,.3,M.trim);box(x,3.55,z,2.2,.16,.3,M.trim);}
+ // structural columns / equipment racks
+ for(const [x,z] of [[-9,7],[9,7],[-9,-3],[9,-4],[-12,-14],[12,-16],[-11,-29],[10,-36]]){
+   box(x,1.65,z,.85,3.3,.85,M.dark);box(x,.5,z,.98,.18,.98,M.trim);box(x,3.15,z,.98,.16,.98,M.trim);
+   box(x,2.7,z+.44,.22,.32,.04,M.cyan);
+ }
+ // stacked storage crates
+ const crate=(x,z,w=1.4,d=1.2,h=1.25,m=M.crate)=>{box(x,h/2,z,w,h,d,m);box(x,h+.025,z,w+.04,.08,d+.04,M.trim);box(x,h/2,z-d/2-.012,w*.8,.08,.025,M.dark);for(let dx of [-w*.38,w*.38])box(x+dx,h/2,z,.06,h*.88,.04,M.trim);};
+ crate(-12,5,2,1.5,1.4);crate(-12,2,1.3,1.3,1.2,M.crate2);crate(12,1,1.9,1.4,1.5);crate(11,-7,1.5,1.4,1.2);
+ crate(-12,-27,2,1.4,1.5);crate(12,-36,1.6,1.6,1.4);crate(-2,-30,1.6,1.5,1.35);
+ // wall consoles in intel room
+ for(let x=6;x<12;x+=1.55){box(x,1.1,-37.4,1.25,1.9,.45,M.dark);box(x,1.72,-37.14,1.08,.54,.07,M.screen);box(x,2.15,-37.35,1.25,.06,.5,M.trim);}
+ // operating desk / elevated core plinth
+ box(8.7,.58,-26.4,4.8,1.05,1.5,M.dark);box(8.7,1.13,-26.4,4.95,.12,1.62,M.trim);
+ // extraction gate and status pylons
+ for(const x of [-2.1,2.1]){box(x,2,-38.1,.22,4,.28,M.dark);box(x,2,-37.91,.1,3.55,.05,M.cyan);pointLight(x,2,-37.6,0x65ffd1,1.4,5);}
+ box(0,4,-38.05,4.4,.22,.3,M.dark);box(0,4,-37.88,3.7,.09,.07,M.cyan);
+ // ceiling lights with luminous fixtures and pools
+ for(const [x,z] of [[0,8],[-1,-1],[0,-9],[-1,-18],[8,-23],[8,-33],[0,-35],[-9,-12]]){
+   box(x,4.04,z,1.35,.06,.48,M.screen);pointLight(x,3.75,z,0x7bdfbd,3.3,11);
+ }
+ // warning beacons, pipes and readable industrial details
+ for(let z=8;z>-39;z-=8){box(-15.9,3.4,z,.15,.1,1.1,M.yellow);box(15.9,3.4,z,.15,.1,1.1,M.red);}
+ for(let z=8;z>-38;z-=3){cylinder(-15.95,3.62,z,.07,.07,2.7,M.trim,8);}
+ // center corridor striping
+ for(let z=8;z>-30;z-=2){box(-.45,.012,z,.07,.02,.65,M.yellow);box(.45,.012,z,.07,.02,.65,M.yellow);}
+}
+buildWorld();
+function sign(text,sub,x,y,z,ry=0,color='#d6ff62'){
+ const c=document.createElement('canvas');c.width=512;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='rgba(8,18,16,.85)';ctx.fillRect(0,0,512,128);ctx.strokeStyle='rgba(214,255,98,.5)';ctx.lineWidth=3;ctx.strokeRect(2,2,508,124);
+ ctx.fillStyle=color;ctx.font='900 38px Inter,Arial,sans-serif';ctx.textAlign='center';ctx.fillText(text,256,62);ctx.fillStyle='#8ea39b';ctx.font='600 19px Inter,Arial,sans-serif';ctx.letterSpacing='4px';ctx.fillText(sub,256,96);
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=4;
+ const m=new THREE.MeshBasicMaterial({map:tex,transparent:true});const p=new THREE.Mesh(new THREE.PlaneGeometry(2.6,.65),m);p.position.set(x,y,z);p.rotation.y=ry;scene.add(p);
+ box(x,y-.42,z,2.7,.07,.14,M.dark).rotation.y=ry;
+}
+sign('OPERATIONS','AUTHORIZED PERSONNEL ONLY',0,3.34,-19.9,0);
+sign('RELAY 04','KOLA PENINSULA / 69°N',0,3.34,1.2,0);
+sign('EXTRACTION','KEEP CLEAR',0,3.34,-34.7,0);
+sign('SECURITY','SECTOR B / LEVEL 02',-5.1,2.8,-14,Math.PI/2,'#ff8a6a');
+// Wall ribbing and cabling turns the long shell into a believable working facility.
+for(let z=11;z>-39;z-=2.8){
+ for(const side of [-1,1]){box(side*16.1,1.55,z,.18,3.1,.1,M.dark);if(z%2>1)box(side*16.02,2.94,z,.14,.1,1.3,M.trim);}
+}
+for(const z of [7,-6,-19,-33]){box(0,4.18,z,30,.1,.1,M.dark);}
+// Low blast barriers and cover give the transit hall a tactical silhouette.
+for(const [x,z,w,d] of [[-9.2,-3.4,3.4,.55],[-9.3,-25.2,2.5,.55],[9.2,-12.5,3,.55],[9.3,-33.5,2.4,.55]]){box(x,.55,z,w,1.1,d,M.dark);box(x,1.13,z,w+.08,.09,d+.08,M.yellow);}
+// Server stacks, recessed doors and a few red emergency lamps fill the side bays.
+function rack(x,z,rot=0){
+ const g=new THREE.Group();scene.add(g);g.position.set(x,0,z);g.rotation.y=rot;
+ const body=new THREE.Mesh(new THREE.BoxGeometry(1.5,2.1,.72),M.dark);body.position.y=1.05;g.add(body);
+ const face=new THREE.Mesh(new THREE.BoxGeometry(1.36,1.9,.06),mat(0x222c29,.7,.25));face.position.set(0,1.05,.38);g.add(face);
+ for(let i=0;i<7;i++){const led=new THREE.Mesh(new THREE.BoxGeometry(.06,.045,.02),new THREE.MeshBasicMaterial({color:i%3?0x5effb0:0xff8a4a}));led.position.set(-.5+(i%4)*.28,1.75-Math.floor(i/4)*.5,.42);g.add(led);}
+ const vent=new THREE.Mesh(new THREE.BoxGeometry(1.2,.5,.03),mat(0x151d1b,.9,0));vent.position.set(0,.5,.41);g.add(vent);
+}
+rack(-14.6,-4,Math.PI/2);rack(-14.6,-5.7,Math.PI/2);rack(14.6,-8.6,-Math.PI/2);rack(14.6,-26.5,-Math.PI/2);
+for(const [x,z] of [[-16.2,-11],[16.2,-15],[-16.2,-31]]){box(x,1.2,z,.09,2.4,1.5,mat(0x1a2422,.8,0));box(x+(x>0?-.09:.09),2.48,z,.06,.09,.12,M.red);box(x+(x>0?-.11:.11),1.2,z,.02,1.9,1.2,M.trim);}
+// A cold pillar of light marks the core and the extraction gate.
+function beam(x,z,color,opacity){const m=new THREE.Mesh(new THREE.CylinderGeometry(.85,.85,3.7,18,1,true),new THREE.MeshBasicMaterial({color,transparent:true,opacity,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));m.position.set(x,1.85,z);scene.add(m);return m;}
+const coreBeam=beam(8.7,-26.4,0x55ffc2,.055),gateBeam=beam(0,-37.4,0x7cffcf,.07);
+// Cold airborne dust catches the ceiling light and gives the long hall a sense of depth.
+{
+ const n=520,pos=new Float32Array(n*3),seed=new Float32Array(n);
+ for(let i=0;i<n;i++){pos[i*3]=(Math.random()-.5)*31;pos[i*3+1]=.15+Math.random()*3.6;pos[i*3+2]=-38+Math.random()*49;seed[i]=Math.random()*Math.PI*2;}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+ const pts=new THREE.Points(g,new THREE.PointsMaterial({color:0xa8ddc9,size:.024,transparent:true,opacity:.34,depthWrite:false}));scene.add(pts);
+ window.__dust={pts,pos,seed};
+}
+const worldSolids=[];scene.traverse(o=>{if(o.isMesh&&!o.material?.transparent)worldSolids.push(o);});
+const player={pos:new THREE.Vector3(0,0,9),yaw:0,pitch:0,health:100,ammo:12,reserve:48,mag:12,alive:true,speed:5.2};
+camera.position.set(player.pos.x,1.68,player.pos.z);scene.add(camera);
+
+// A compact, original service pistol is mounted to the camera for an unmistakable first-person view.
+// First-person viewmodel: a compact, suppressed service pistol held in a gloved hand.
+const gun=new THREE.Group();camera.add(gun);gun.position.set(.235,-.19,-.5);gun.rotation.set(-.015,.155,-.02);
+const gunMat=mat(0x4b5752,.48,.32,0x090f0d),gunSteel=mat(0x8b9892,.42,.38,0x0a120f),glove=mat(0x2b3833,.94,0);
+function gm(geo,m,x,y,z,rx=0,ry=0,rz=0){const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.rotation.set(rx,ry,rz);gun.add(o);return o;}
+gm(new THREE.BoxGeometry(.108,.082,.38),gunMat,0,.008,-.06);
+gm(new THREE.BoxGeometry(.118,.072,.40),gunSteel,0,.082,-.075);
+gm(new THREE.BoxGeometry(.09,.018,.40),mat(0x626e68,.5,.4),0,.126,-.075);
+for(let i=0;i<4;i++)gm(new THREE.BoxGeometry(.12,.05,.012),M.dark,0,.083,.075+i*.022);
+gm(new THREE.CylinderGeometry(.043,.043,.27,12),mat(0x3c4742,.55,.4),0,.062,-.37);
+for(let i=0;i<3;i++)gm(new THREE.TorusGeometry(.044,.006,5,12),mat(0x6c7872,.5,.4),0,.062,-.27-i*.06,Math.PI/2);
+gm(new THREE.BoxGeometry(.092,.19,.125),mat(0x333e39,.8,0),0,-.14,.055,-.27);
+gm(new THREE.BoxGeometry(.075,.15,.118),mat(0x43504a,.86,0),0,-.14,.048,-.27);
+gm(new THREE.TorusGeometry(.052,.009,6,14,Math.PI),gunMat,0,-.05,-.075,0,Math.PI/2,Math.PI);
+gm(new THREE.BoxGeometry(.022,.038,.03),M.dark,0,-.055,-.05,-.25);
+gm(new THREE.BoxGeometry(.075,.018,.022),M.dark,0,.123,.075);
+gm(new THREE.BoxGeometry(.028,.026,.02),new THREE.MeshBasicMaterial({color:0xc4ff8c}),0,.128,-.255);
+// glove wrapping the grip
+gm(new THREE.BoxGeometry(.115,.13,.12),glove,.005,-.15,.115,-.18);
+for(let i=0;i<3;i++)gm(new THREE.BoxGeometry(.112,.032,.055),glove,0,-.095-i*.042,.022,-.22);
+gm(new THREE.BoxGeometry(.04,.11,.065),glove,-.055,-.075,.09,-.2,0,.16);
+gm(new THREE.BoxGeometry(.13,.13,.30),mat(0x35423c,.96,0),.01,-.28,.27,.34);
+gm(new THREE.CylinderGeometry(.043,.037,.035,10),M.dark,0,.062,-.505,Math.PI/2);
+const muzzleFlash=new THREE.Mesh(new THREE.ConeGeometry(.085,.2,8),new THREE.MeshBasicMaterial({color:0xffdd85,transparent:true,opacity:.9}));muzzleFlash.rotation.x=-Math.PI/2;muzzleFlash.position.set(0,.062,-.57);muzzleFlash.visible=false;gun.add(muzzleFlash);
+const muzzleLight=new THREE.PointLight(0xffc477,0,3.4,2);muzzleLight.position.set(0,.06,-.6);gun.add(muzzleLight);
+if(innerWidth<720){gun.scale.setScalar(.31);gun.position.set(.205,-.175,-.48);}else{gun.scale.setScalar(.38);gun.position.set(.235,-.19,-.5);}
+gun.userData.baseZ=gun.position.z;
+const enemies=[];
+function makeEnemy(x,z,patrol=0){
+ const g=new THREE.Group();scene.add(g);g.position.set(x,0,z);g.userData={hp:100,alive:true,origin:new THREE.Vector3(x,0,z),patrol,phase:Math.random()*6,fire:1+Math.random()*1.8};
+ const uniform=mat(0x263c39),vest=mat(0x182a28),skin=mat(0x927c69),visor=mat(0x15201e,.2,.3,0x220e08);
+ const torso=new THREE.Mesh(new THREE.BoxGeometry(.55,.74,.34),uniform);torso.position.y=1.18;g.add(torso);
+ const armor=new THREE.Mesh(new THREE.BoxGeometry(.58,.42,.37),vest);armor.position.set(0,1.25,-.015);g.add(armor);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.22,12,10),skin);head.position.y=1.72;g.add(head);
+ const helmet=new THREE.Mesh(new THREE.SphereGeometry(.24,12,8,0,Math.PI*2,0,Math.PI*.56),M.dark);helmet.position.y=1.79;g.add(helmet);
+ const band=new THREE.Mesh(new THREE.BoxGeometry(.31,.065,.035),visor);band.position.set(0,1.76,-.205);g.add(band);
+ for(const side of [-1,1]){const limb=new THREE.Mesh(new THREE.BoxGeometry(.17,.65,.19),uniform);limb.position.set(side*.38,1.12,-.01);limb.rotation.z=side*-.12;g.add(limb);const leg=new THREE.Mesh(new THREE.BoxGeometry(.22,.62,.23),M.dark);leg.position.set(side*.16,.42,.02);g.add(leg);}
+ const rifle=new THREE.Mesh(new THREE.BoxGeometry(.11,.12,.66),M.black);rifle.position.set(.06,1.12,-.32);g.add(rifle);
+ const eye=new THREE.PointLight(0xff3c21,.42,2);eye.position.set(0,1.76,-.3);g.add(eye);g.userData.eye=eye;
+ enemies.push(g);return g;
+}
+makeEnemy(0,-7,1);makeEnemy(-11,-15,.6);makeEnemy(3,-27,.8);makeEnemy(11,-29,.5);makeEnemy(-1,-35,.4);
+// Supply caches reward exploration without breaking the stealth pacing.
+const pickups=[];
+function pickup(x,z,kind){
+ const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);g.userData={kind,taken:false,baseY:.22};
+ const m=kind==='med'?new THREE.MeshStandardMaterial({color:0xe9e4cc,roughness:.7,emissive:0x273d28,emissiveIntensity:.5}):new THREE.MeshStandardMaterial({color:0x7b8b4a,roughness:.6,emissive:0x1d2c18,emissiveIntensity:.5});
+ const b=new THREE.Mesh(new THREE.BoxGeometry(.42,.28,.3),m);b.position.y=.14;g.add(b);
+ const crossM=new THREE.MeshBasicMaterial({color:kind==='med'?0x76ffa4:0xd7ff74});
+ if(kind==='med'){const h1=new THREE.Mesh(new THREE.BoxGeometry(.23,.055,.012),crossM);h1.position.set(0,.17,.155);g.add(h1);const h2=new THREE.Mesh(new THREE.BoxGeometry(.055,.23,.012),crossM);h2.position.set(0,.17,.155);g.add(h2);}
+ else {for(let i=0;i<3;i++){const r=new THREE.Mesh(new THREE.BoxGeometry(.22,.035,.05),crossM);r.position.set(0,.12+i*.07,.16);g.add(r);}}
+ const l=pointLight(x,.55,z,kind==='med'?0x55ff9a:0xc8ff68,1.1,3.4);g.userData.light=l;pickups.push(g);
+}
+pickup(11,-20.5,'med');pickup(-11.5,-7.8,'ammo');pickup(-2.5,-30.5,'ammo');
+// Core floats over its plinth; its light makes the objective readable from the entry.
+const core=new THREE.Group();scene.add(core);core.position.set(8.7,1.62,-26.4);
+const coreGem=new THREE.Mesh(new THREE.OctahedronGeometry(.48,0),new THREE.MeshStandardMaterial({color:0x9effe1,metalness:.2,roughness:.2,emissive:0x24e6a3,emissiveIntensity:2}));core.add(coreGem);
+const coreRing=new THREE.Mesh(new THREE.TorusGeometry(.74,.035,8,40),M.cyan);coreRing.rotation.x=Math.PI/2;core.add(coreRing);const coreLight=pointLight(8.7,2.1,-26.4,0x38ffb8,2.6,8);
+// Cyan beacon marks the extraction point.
+const beacon=new THREE.Mesh(new THREE.CylinderGeometry(.45,.65,.12,16),M.cyan);beacon.position.set(0,.08,-37.4);scene.add(beacon);
+
+const raycaster=new THREE.Raycaster();raycaster.far=45;
+const losRay=new THREE.Raycaster(),losDir=new THREE.Vector3(),losFrom=new THREE.Vector3(),losTo=new THREE.Vector3();
+const state={running:false,core:false,ended:false,alert:2,kills:0,toastTimer:0,shootCooldown:0,reloadTimer:0,damageFlash:0};
+let audioCtx=null;
+function sfx(kind){
+ try{audioCtx??=new (window.AudioContext||window.webkitAudioContext)();const t=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);
+  if(kind==='shot'){o.type='square';o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(46,t+.12);g.gain.setValueAtTime(.075,t);g.gain.exponentialRampToValueAtTime(.001,t+.14);o.start(t);o.stop(t+.15);const n=audioCtx.createBufferSource(),buf=audioCtx.createBuffer(1,2400,audioCtx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);n.buffer=buf;const ng=audioCtx.createGain();ng.gain.value=.06;n.connect(ng);ng.connect(audioCtx.destination);n.start(t);}
+  else if(kind==='hit'){o.type='triangle';o.frequency.setValueAtTime(880,t);o.frequency.exponentialRampToValueAtTime(320,t+.08);g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.001,t+.1);o.start(t);o.stop(t+.11);}
+  else if(kind==='hurt'){o.type='sawtooth';o.frequency.setValueAtTime(90,t);o.frequency.exponentialRampToValueAtTime(42,t+.25);g.gain.setValueAtTime(.055,t);g.gain.exponentialRampToValueAtTime(.001,t+.26);o.start(t);o.stop(t+.27);}
+  else if(kind==='reload'){o.type='sine';o.frequency.setValueAtTime(260,t);g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+.12);o.start(t);o.stop(t+.13);}
+  else if(kind==='secured'){o.type='sine';o.frequency.setValueAtTime(420,t);o.frequency.exponentialRampToValueAtTime(840,t+.35);g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.001,t+.5);o.start(t);o.stop(t+.52);}
+ }catch(e){}
+}
+const keys=new Set();let joy={x:0,y:0},lookTouch=null,fireHeld=false,fireTimer=0;
+function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');state.toastTimer=2.2;}
+function updateObjective(){ $('#objective').textContent=state.core?'Reach the extraction gate':'Locate the intelligence core';$('#actionBtn').style.display=state.core?'none':'block'; }
+function begin(){state.running=true;$('#startScreen').classList.add('hidden');$('#hud').style.display='block';try{audioCtx??=new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();}catch(e){}try{if(matchMedia('(pointer:fine)').matches)renderer.domElement.requestPointerLock?.();}catch(e){}toast('OPERATION LIVE / MOVE TO THE CORE');}
+function setEnd(win){state.ended=true;state.running=false;$('#hud').style.display='none';$('#endScreen').classList.remove('hidden');$('#endEyebrow').textContent=win?'MISSION COMPLETE':'OPERATION FAILED';$('#endTitle').innerHTML=win?'EXFIL<span>SECURED</span>':'MISSION<span>COMPROMISED</span>';$('#endResult').textContent=win?`Intelligence secured. ${state.kills} hostile${state.kills===1?'':'s'} neutralized. The facility never knew you were there.`:'You were overwhelmed in the facility. Recalibrate and try another approach.';document.exitPointerLock?.();}
+$('#startBtn').addEventListener('click',begin);$('#restartBtn').addEventListener('click',()=>location.reload());
+function onKey(e,down){const k=e.key.toLowerCase();if(down)keys.add(k);else keys.delete(k);if(['w','a','s','d',' ','arrowup','arrowdown','arrowleft','arrowright'].includes(k))e.preventDefault();if(down&&k==='r')reload();if(down&&k===' '&&state.running)fire();}
+addEventListener('keydown',e=>onKey(e,true));addEventListener('keyup',e=>onKey(e,false));
+renderer.domElement.addEventListener('click',()=>{if(state.running&&innerWidth>700)renderer.domElement.requestPointerLock?.();if(state.running&&document.pointerLockElement===renderer.domElement)fire();});
+addEventListener('mousemove',e=>{if(state.running&&document.pointerLockElement===renderer.domElement){player.yaw-=e.movementX*.0022;player.pitch=Math.max(-1.28,Math.min(1.28,player.pitch-e.movementY*.002));}});
+renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
+function bindStick(){const base=$('#joystick'),knob=$('#stick');let pid=null;const move=e=>{if(pid!==e.pointerId)return;const r=base.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),max=r.width*.34,d=Math.hypot(dx,dy),scale=d>max?max/d:1;joy={x:dx*scale/max,y:dy*scale/max};knob.style.transform=`translate(calc(-50% + ${joy.x*max}px),calc(-50% + ${joy.y*max}px))`;};base.addEventListener('pointerdown',e=>{pid=e.pointerId;base.setPointerCapture(pid);move(e);});base.addEventListener('pointermove',move);const end=e=>{if(pid!==e.pointerId)return;pid=null;joy={x:0,y:0};knob.style.transform='translate(-50%,-50%)';};base.addEventListener('pointerup',end);base.addEventListener('pointercancel',end);}
+bindStick();
+const look=$('#lookZone');look.addEventListener('pointerdown',e=>{lookTouch={id:e.pointerId,x:e.clientX,y:e.clientY};look.setPointerCapture(e.pointerId);});look.addEventListener('pointermove',e=>{if(!lookTouch||lookTouch.id!==e.pointerId)return;const dx=e.clientX-lookTouch.x,dy=e.clientY-lookTouch.y;player.yaw-=dx*.006;player.pitch=Math.max(-1.25,Math.min(1.25,player.pitch-dy*.005));lookTouch={id:e.pointerId,x:e.clientX,y:e.clientY};});const endLook=e=>{if(lookTouch?.id===e.pointerId)lookTouch=null;};look.addEventListener('pointerup',endLook);look.addEventListener('pointercancel',endLook);
+$('#fireBtn').addEventListener('pointerdown',e=>{e.preventDefault();fireHeld=true;fire();});['pointerup','pointercancel','pointerleave'].forEach(ev=>$('#fireBtn').addEventListener(ev,()=>fireHeld=false));$('#reloadBtn').addEventListener('pointerdown',e=>{e.preventDefault();reload();});$('#actionBtn').addEventListener('pointerdown',e=>{e.preventDefault();secureCore();});
+// Geometry-based world collision keeps the player inside the facility and out of solid props.
+const worldColliders=[];
+for(const o of scene.children){if(!o.isMesh)continue;const b=new THREE.Box3().setFromObject(o);if(b.max.y>.18&&b.min.y<1.78&&b.max.x-b.min.x<20&&b.max.z-b.min.z<40)worldColliders.push({minX:b.min.x,maxX:b.max.x,minZ:b.min.z,maxZ:b.max.z});}
+function blocked(x,z){const r=.32;for(const b of worldColliders){if(x+r>b.minX&&x-r<b.maxX&&z+r>b.minZ&&z-r<b.maxZ)return true;}return false;}
+function reload(){if(!state.running||state.reloadTimer>0||player.ammo===player.mag||player.reserve<=0)return;state.reloadTimer=1.15;sfx('reload');toast('RELOADING');}
+function flashHit(){const el=$('#hitmarker');el.classList.add('on');setTimeout(()=>el.classList.remove('on'),110);}
+const tracers=[];
+function makeTracer(end){const start=new THREE.Vector3();camera.getWorldPosition(start);camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(.7).add(start);const geom=new THREE.BufferGeometry().setFromPoints([start,end]);const line=new THREE.Line(geom,new THREE.LineBasicMaterial({color:0xc9ff9a,transparent:true,opacity:.8}));scene.add(line);tracers.push({line,life:.055});}
+function fire(){if(!state.running||state.shootCooldown>0||state.reloadTimer>0)return;if(player.ammo<=0){toast('MAGAZINE EMPTY / TAP RELOAD');sfx('reload');state.shootCooldown=.25;return;}player.ammo--;state.shootCooldown=.2;fireTimer=.06;gun.position.z=gun.userData.baseZ+.035;gun.rotation.x=.05;sfx('shot');const dir=new THREE.Vector3();camera.getWorldDirection(dir);raycaster.set(camera.position,dir);
+ const hits=raycaster.intersectObjects(enemies.filter(e=>e.userData.alive),true);let target=null,hitDist=45;
+ for(const h of hits){let p=h.object;while(p&&!p.userData?.alive)p=p.parent;if(p&&p.userData?.alive){target=p;hitDist=h.distance;break;}}
+ const end=raycaster.ray.at(Math.min(38,hitDist),new THREE.Vector3());makeTracer(end);
+ if(target){target.userData.hp-=50;flashHit();sfx('hit');target.userData.eye.color.setHex(0xffe9ae);setTimeout(()=>{if(target.userData)target.userData.eye.color.setHex(0xff3c21);},110);if(target.userData.hp<=0){target.userData.alive=false;state.kills++;target.rotation.x=-1.05;target.position.y=-.25;toast('HOSTILE DOWN');}}
+ $('#ammo').innerHTML=`${player.ammo} <em>/ ${player.reserve}</em>`;
+}
+function secureCore(){if(state.core||player.pos.distanceTo(new THREE.Vector3(8.7,0,-26.4))>2.8)return;state.core=true;scene.remove(core);scene.remove(coreLight);sfx('secured');updateObjective();toast('INTEL SECURED / PROCEED TO EXTRACTION');pointLight(0,2,-37.4,0x6bffd2,3.2,8);}
+function updateEnemies(dt,t){for(const e of enemies){if(!e.userData.alive)continue;const d=e.position.distanceTo(player.pos);e.userData.phase+=dt*2;const origin=e.userData.origin;e.position.x=origin.x+Math.sin(e.userData.phase*.4)*e.userData.patrol*.8;e.position.z=origin.z+Math.cos(e.userData.phase*.35)*e.userData.patrol*.55;e.lookAt(player.pos.x,1.1,player.pos.z);
+ e.userData.check=(e.userData.check??0)-dt;
+ if(e.userData.check<=0){e.userData.check=.2;losFrom.copy(e.position);losFrom.y=1.25;losTo.copy(player.pos);losTo.y=1.35;losDir.subVectors(losTo,losFrom);const ld=losDir.length();losRay.set(losFrom,losDir.normalize());losRay.far=ld;const wh=losRay.intersectObjects(worldSolids,false);e.userData.los=!wh.length||wh[0].distance>ld-.25;}
+ if(d<15&&e.userData.los){state.alert=Math.max(state.alert,3);e.userData.fire-=dt;if(d<12&&e.userData.fire<=0){e.userData.fire=1.5+Math.random()*1.5;const chance=Math.max(.2,.72-d/22);if(Math.random()<chance){player.health=Math.max(0,player.health-(5+Math.floor(Math.random()*5)));state.damageFlash=.22;$('#health').textContent=`${player.health}%`;sfx('hurt');$('#damage').style.opacity='1';if(player.health<=0)setEnd(false);}}}
+ }}
+function update(dt,t){if(!state.running)return;
+ state.shootCooldown=Math.max(0,state.shootCooldown-dt);if(fireTimer>0){fireTimer-=dt;muzzleFlash.visible=true;muzzleLight.intensity=2.4;}else{muzzleFlash.visible=false;muzzleLight.intensity=0;gun.position.z=THREE.MathUtils.lerp(gun.position.z,gun.userData.baseZ,Math.min(1,dt*22));gun.rotation.x=THREE.MathUtils.lerp(gun.rotation.x,-.015,Math.min(1,dt*18));}if(fireHeld){fireTimer>0?null:fire();}
+ if(state.reloadTimer>0){state.reloadTimer-=dt;if(state.reloadTimer<=0){const n=Math.min(player.mag-player.ammo,player.reserve);player.ammo+=n;player.reserve-=n;$('#ammo').innerHTML=`${player.ammo} <em>/ ${player.reserve}</em>`;toast('MAGAZINE READY');}}
+ let f=(keys.has('w')||keys.has('arrowup')?1:0)-(keys.has('s')||keys.has('arrowdown')?1:0)-joy.y;let side=(keys.has('d')||keys.has('arrowright')?1:0)-(keys.has('a')||keys.has('arrowleft')?1:0)+joy.x;
+ const mag=Math.hypot(f,side);if(mag>1){f/=mag;side/=mag;}const forward=new THREE.Vector3(-Math.sin(player.yaw),0,-Math.cos(player.yaw)),right=new THREE.Vector3(Math.cos(player.yaw),0,-Math.sin(player.yaw));const dx=(forward.x*f+right.x*side)*player.speed*dt,dz=(forward.z*f+right.z*side)*player.speed*dt;
+ if(!blocked(player.pos.x+dx,player.pos.z))player.pos.x+=dx;if(!blocked(player.pos.x,player.pos.z+dz))player.pos.z+=dz;
+ player.pos.x=THREE.MathUtils.clamp(player.pos.x,worldBounds.minX,worldBounds.maxX);player.pos.z=THREE.MathUtils.clamp(player.pos.z,worldBounds.minZ,worldBounds.maxZ);
+ camera.position.set(player.pos.x,1.68+Math.sin(t*9)*Math.min(.018,mag*.008),player.pos.z);camera.rotation.set(player.pitch,player.yaw,0,'YXZ');
+ const nearCore=!state.core&&player.pos.distanceTo(new THREE.Vector3(8.7,0,-26.4))<2.8;$('#actionBtn').style.display=nearCore?'block':'none';$('#reticleLabel').textContent=nearCore?'TAP SECURE / E':(state.core&&player.pos.distanceTo(new THREE.Vector3(0,0,-37.4))<3?'EXTRACTION / ENTER':'');if(nearCore&&keys.has('e'))secureCore();if(state.core&&player.pos.distanceTo(new THREE.Vector3(0,0,-37.4))<1.6)setEnd(true);
+ if(core.parent){core.rotation.y=t*.72;core.position.y=1.62+Math.sin(t*2.4)*.1;coreRing.rotation.z=t*.5;}
+ for(const p of pickups){if(p.userData.taken)continue;p.rotation.y=t*1.3;p.position.y=Math.sin(t*2.2+p.position.x)*.035;if(p.position.distanceTo(player.pos)<1.15){p.userData.taken=true;p.visible=false;scene.remove(p.userData.light);if(p.userData.kind==='med'){player.health=Math.min(100,player.health+35);$('#health').textContent=`${player.health}%`;toast('FIELD DRESSING / VITALS RESTORED');}else{player.reserve+=24;$('#ammo').innerHTML=`${player.ammo} <em>/ ${player.reserve}</em>`;toast('SUPPLY CACHE / +24 ROUNDS');}sfx('secured');}}
+ updateEnemies(dt,t);const alive=enemies.filter(e=>e.userData.alive).length;$('#alertText').textContent=state.alert>=3?`ACTIVE / ${String(alive).padStart(2,'0')}`:`LOW / ${String(alive).padStart(2,'0')}`;
+ if(state.toastTimer>0){state.toastTimer-=dt;if(state.toastTimer<=0)$('#toast').classList.remove('show');}if(state.damageFlash>0){state.damageFlash-=dt;if(state.damageFlash<=0)$('#damage').style.opacity='0';}
+ if(window.__dust){const d=window.__dust;for(let i=0;i<d.seed.length;i++){d.pos[i*3+1]+=dt*.035;d.pos[i*3]+=Math.sin(t*.22+d.seed[i])*dt*.035;if(d.pos[i*3+1]>3.8)d.pos[i*3+1]=.1;}d.pts.geometry.attributes.position.needsUpdate=true;}
+ for(let i=tracers.length-1;i>=0;i--){const b=tracers[i];b.life-=dt;if(b.life<=0){scene.remove(b.line);b.line.geometry.dispose();b.line.material.dispose();tracers.splice(i,1);}}
+}
+window.THREE=THREE;window.__game={camera,gun,scene,player,enemies,state,renderer};
+let last=performance.now(),elapsed=0;function frame(now){requestAnimationFrame(frame);const dt=Math.min(.04,(now-last)/1000);last=now;elapsed+=dt;update(dt,elapsed);renderer.render(scene,camera);}requestAnimationFrame(frame);
+function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.65));}addEventListener('resize',resize);
+</script>
+</body>
+</html>
